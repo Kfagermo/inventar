@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#007bff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <title>Lager System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/html5-qrcode@2.3.7/minified/html5-qrcode.min.js"></script>
+    <script src="config.js" defer></script>
+    <script src="ui.js" defer></script>
+    <script src="inventory.js" defer></script>
+    <script src="stock.js" defer></script>
+</head>
+<body>
+    <div class="mobile-container">
+        <header>
+            <h1>Lager System</h1>
+            <button id="scanButton" class="action-button">
+                <span>📷 Scan QR</span>
+            </button>
+        </header>
+
+        <div class="search-bar">
+            <input type="search" id="searchInput" placeholder="Søk etter varer...">
+        </div>
+
+        <div class="loading" id="loadingIndicator"></div>
+        <div id="stockErrorMessage" class="error-message" style="display: none;"></div>
+        <div class="inventory-list" id="inventoryList">
+            <!-- Items will be populated here -->
+        </div>
+
+        <div id="adjustStockModal" class="mobile-modal">
+            <div class="modal-content adjustment-modal-content">
+                <h2 id="itemDescription"></h2>
+                <p>Nåværende antall: <span id="currentStock"></span></p>
+                <div class="stock-controls">
+                    <button id="decreaseStock" class="stock-button">-</button>
+                    <input type="number" id="stockInput" min="0">
+                    <button id="increaseStock" class="stock-button">+</button>
+                </div>
+                <div class="modal-buttons">
+                    <button id="confirmStockButton" class="primary-button">Oppdater</button>
+                    <button id="closeStockModal" class="secondary-button">Avbryt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanner Container -->
+        <div id="scannerContainer" class="scanner-container">
+            <div id="reader"></div>
+            <p class="scanner-instruction">Plasser QR-koden innenfor rammen for å skanne</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <script src="config.js"></script>
+    <script src="ui.js"></script>
+    <script src="inventory.js"></script>
+    <script src="stock.js"></script>
+    <script src="qr.js"></script>
+
+    <!-- Register Service Worker (Commented Out) -->
+    <!--
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+    -->
+</body>
+</html>
