@@ -13,7 +13,12 @@ import logging
 
 # Initialize Flask app first
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})  # Adjust origins as needed
+CORS(app, resources={r"/api/*": {
+    "origins": [
+        "https://kfagermo.github.io",  # GitHub Pages domain
+        "http://localhost:5000"        # Local development
+    ]
+}})
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
