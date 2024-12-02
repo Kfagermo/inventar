@@ -161,5 +161,77 @@ def unlock_item():
         logger.exception('Error unlocking item: %s', e)
         return jsonify({'error': 'Internal Server Error'}), 500
 
+@app.route(f'{API_PREFIX}/update_inventory', methods=['POST'])
+def update_inventory():
+    try:
+        data = request.json
+        if not data or 'inventory' not in data:
+            logger.error('Invalid data format: %s', data)
+            return jsonify({'error': 'Invalid data format'}), 400
+
+        inventory_items = data['inventory']
+        updated_count = 0
+
+        for item_data in inventory_items:
+            el_nummer_id = item_data.get('el_nummer_id')
+            if not el_nummer_id:
+                continue
+
+            item = InventoryItem.query.filter_by(el_nummer_id=el_nummer_id).first()
+            if item:
+                # Update existing item
+                item.beskrivelse = item_data.get('beskrivelse', item.beskrivelse)
+                item.kategori = item_data.get('kategori', item.kategori)
+                item.hylle = item_data.get('hylle', item.hylle)
+                item.enhet = item_data.get('enhet', item.enhet)
+                item.antall = item_data.get('antall', item.antall)
+                item.anbefalt_minimum = item_data.get('anbefalt_minimum', item.anbefalt_minimum)
+            else:
+                # Create new item
+                item = InventoryItem(
+                    el_nummer_id=el_nummer_id,
+                    beskrivelse=item_data.get('beskrivelse', ''),
+                    kategori=item_data.get('kategori', ''),
+                    hylle=item_data.get('hylle', ''),
+                    enhet=item_data.get('enhet', ''),
+                    antall=item_data.get('antall', 0),
+                    anbefalt_minimum=item_data.get('anbefalt_minimum', 0)
+                )
+                db.session.add(item)
+            
+            updated_count += 1
+
+        db.session.commit()
+        logger.info('Successfully updated %d inventory items', updated_count)
+        return jsonify({'message': f'Successfully updated {updated_count} items'}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        logger.exception('Error updating inventory: %s', e)
+        return jsonify({'error': 'Internal Server Error'}), 500
+
+@app.route(f'{API_PREFIX}/delete_inventory_item', methods=['POST'])
+def delete_inventory_item():
+    try:
+        data = request.json
+        if not data or 'el_nummer_id' not in data:
+            return jsonify({'error': 'Invalid data format'}), 400
+
+        el_nummer_id = data['el_nummer_id']
+        item = InventoryItem.query.filter_by(el_nummer_id=el_nummer_id).first()
+        
+        if not item:
+            return jsonify({'error': 'Item not found'}), 404
+            
+        db.session.delete(item)
+        db.session.commit()
+        
+        return jsonify({'message': f'Successfully deleted item {el_nummer_id}'}), 200
+        
+    except Exception as e:
+        logger.error(f'Error deleting inventory item: {str(e)}')
+        db.session.rollback()
+        return jsonify({'error': 'Internal server error'}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)

@@ -1,0 +1,29 @@
+cat > .gitignore << 'EOL'
+# Backend
+backend/__pycache__/
+backend/*.pyc
+backend/*.db
+backend/.env
+backend/Lager.xlsx
+backend/lager.csv
+
+# Certificates
+frontend/certs/
+*.crt
+*.key
+
+# Excel files
+*.xlsx
+~$*.xlsx
+
+# Environment
+venv/
+.env
+
+# Docker
+database/data/
+
+# Misc
+.DS_Store
+node_modules/
+EOL
