@@ -48,3 +48,12 @@ Access the web application at: https://[your-github-username].github.io/inventor
 ## License
 Open Source
 EOL'
+
+## Security Configuration
+
+SSL certificates should be stored securely and mounted to the containers at runtime. 
+Do not commit certificates to the repository.
+
+1. Place your certificates in a secure location
+2. Update the certificate path in docker-compose.yml
+3. Ensure proper permissions on certificate files
