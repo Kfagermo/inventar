@@ -7,10 +7,12 @@ backend/.env
 backend/Lager.xlsx
 backend/lager.csv
 
-# Certificates
-frontend/certs/
+# Certificates and keys
 *.crt
 *.key
+*.pem
+frontend/certs/
+backend/certs/
 
 # Excel files
 *.xlsx
