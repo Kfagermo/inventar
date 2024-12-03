@@ -4,8 +4,8 @@ $do$
 BEGIN
    IF NOT EXISTS (
       SELECT FROM pg_catalog.pg_roles
-      WHERE  rolname = 'postgres') THEN
-      CREATE USER postgres WITH SUPERUSER PASSWORD 'postgres';
+      WHERE  rolname = current_setting('POSTGRES_USER')) THEN
+      CREATE USER current_setting('POSTGRES_USER') WITH SUPERUSER PASSWORD current_setting('POSTGRES_PASSWORD');
    END IF;
 END
 $do$;
